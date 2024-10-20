@@ -1,0 +1,23 @@
+<!-- templates/books/book_list.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Book List</title>
+  </head>
+  <body>
+    <h1>Book List</h1>
+    {% if books %}
+    <ul>
+      {% for book in books %}
+      <li>
+        <strong>{{ book.title }}</strong> by {{ book.author.name }} <br />
+        Published on : {{ book.published_date| date:"F j, Y" }} <br />
+        Description : {{ book.description | truncatewords:20}}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No books are available at the moment. Please check back later.</p>
+    {% endif %}
+  </body>
+</html>
