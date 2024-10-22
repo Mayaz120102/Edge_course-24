@@ -1,7 +1,6 @@
 from django import forms
-
 from django.core.exceptions import ValidationError
-
+from books.models import Book
 
 class ContactForm(forms.Form):
     name = forms.CharField(max_length=100, required=True)
@@ -15,3 +14,16 @@ class ContactForm(forms.Form):
             raise ValidationError("Email must be from example.com domain. ")
         
         return email
+    
+
+class BookForm(forms.ModelForm):
+    class Meta:
+        model = Book
+        fields = ['title', 'description', 'published_date', 'price', 'author', 'publisher']
+ 
+    def clean_price(self):
+        price = self.cleaned_data.get('price')
+        if price<= 0:
+            raise forms.ValidationError("the price must be positive !")
+        
+        return price

@@ -3,10 +3,10 @@ from django.shortcuts import render
 # Create your views here.
 from django.http import HttpResponse
 from django.views import View
-from django.views.generic import ListView , FormView
+from django.views.generic import ListView , FormView ,CreateView
 from django.urls import reverse_lazy
 from books.models import Book
-from books.forms import ContactForm
+from books.forms import ContactForm , BookForm
 
 
 
@@ -31,3 +31,10 @@ class ContactFormView(FormView):
     def form_valid(self, form):
 
         return super().form_valid(form)
+    
+
+class BookCreateView(CreateView):
+    model = Book
+    form_class = BookForm
+    template_name = 'book_form.html'
+    success_url = reverse_lazy('book_success')
