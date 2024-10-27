@@ -6,10 +6,15 @@ class Author(models.Model):
     name = models.CharField(max_length=100)
     birthdate = models.DateField()
 
+    def __str__(self) -> str:
+        return self.name 
+
 class Publisher(models.Model):
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=255)
     website = models.URLField()
+
+    
 
 class Book(models.Model):
     title = models.CharField(max_length=100)
@@ -18,3 +23,13 @@ class Book(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE, null=True, blank=True)
+
+    
+    class Meta:
+        permissions = [
+            ("can_view_sensitive_data", "Can view sensitive book data"),
+        ]
+     
+
+    def __str__(self):
+        return self.title

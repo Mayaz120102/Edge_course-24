@@ -1,0 +1,12 @@
+<!-- templates/sensitive_book_data.html -->
+<h1>Sensitive Book Data</h1>
+
+{% if books %}
+<ul>
+  {% for book in books %}
+  <li>{{ book.title }} - ${{ book.price }}</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No books available.</p>
+{% endif %}
