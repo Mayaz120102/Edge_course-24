@@ -12,7 +12,7 @@ from django.utils.decorators import method_decorator
 
 #from rest_framework
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -75,7 +75,10 @@ class AuthorListCreate(APIView):
 
 
 class BookListCreateView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request):
+        print(request.user)
         books  = Book.objects.all()
         serializer  = BookSerializer(books, many=True)
         data = serializer.data
@@ -97,8 +100,13 @@ class BookGetUpdateDelete(RetrieveModelMixin,UpdateModelMixin,DestroyModelMixin,
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
     
-    def post(self,request, *args, **kwargs):
+    def put(self,request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
-
+    
+    def patch(self,request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+    
+    def delete(self,request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 
