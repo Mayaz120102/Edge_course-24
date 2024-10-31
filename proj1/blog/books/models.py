@@ -14,6 +14,9 @@ class Publisher(models.Model):
     address = models.CharField(max_length=255)
     website = models.URLField()
 
+    def __str__(self):
+        return self.name
+
     
 
 class Book(models.Model):
@@ -23,7 +26,8 @@ class Book(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE, null=True, blank=True)
-
+    created_ap = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(null=True, blank=True)
     
     class Meta:
         permissions = [

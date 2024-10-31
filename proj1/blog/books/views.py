@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from django.contrib.auth.decorators import permission_required
 
 # Create your views here.
@@ -10,13 +11,15 @@ from django.utils.decorators import method_decorator
 
 
 #from rest_framework
+from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework import status
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from books.models import Book
+from books.models import Book ,Author
 from books.forms import ContactForm , BookForm
-from books.serializers import BookSerializer
+from books.serializers import BookSerializer ,AuthorSerializer
 
 @method_decorator(permission_required('books.can_view_sensitive_data', raise_exception=True), name='dispatch')
 
@@ -56,6 +59,20 @@ class BookCreateView(CreateView):
     success_url = reverse_lazy('book_success')
 
 #Restframework APIs
+class AuthorListCreate(APIView):
+    def get(self, request):
+        authors = Author.objects.all()
+        serializer = AuthorSerializer(authors, many=True)
+        data = serializer.data
+        return Response(data, status= status.HTTP_200_OK)
+    
+    def post(self, request):
+        serializer = AuthorSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status= status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class BookListCreateView(APIView):
     def get(self, request):
@@ -65,9 +82,23 @@ class BookListCreateView(APIView):
         return Response(data, status= status.HTTP_200_OK)
     
     def post(self, request):
+        # instance = Book.objects.get(id=pk)
         serializer = BookSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status= status.HTTP_201_CREATED)
         
-          
+
+class BookGetUpdateDelete(RetrieveModelMixin,UpdateModelMixin,DestroyModelMixin, GenericAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    http_method_names = ('get', 'post', 'put', 'delete')
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+    
+    def post(self,request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+
+

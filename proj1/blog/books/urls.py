@@ -1,6 +1,6 @@
 from django.urls import path
 from django.shortcuts import render
-from books.views import MyView , BookListView , ContactFormView , BookCreateView , SensitiveBookDataView, BookListCreateView
+from books.views import MyView , BookListView , ContactFormView , BookCreateView , SensitiveBookDataView, BookListCreateView, BookGetUpdateDelete
 
 urlpatterns = [
     path('initial/', MyView.as_view(), name='initial'),
@@ -11,4 +11,5 @@ urlpatterns = [
     path('books_success/', lambda request:render(request, "success/book_success.html"), name="book_success"),
     path('sensitive-data/', SensitiveBookDataView.as_view(), name='sensitive_date'),
     path('books_rest/', BookListCreateView.as_view(), name="books_list_create"),
+    path('rest/book/<int:pk>', BookGetUpdateDelete.as_view(), name='rest_book'),
 ]
