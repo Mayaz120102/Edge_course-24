@@ -1,5 +1,4 @@
 from django.contrib.auth.decorators import permission_required
-from django.shortcuts import render
 
 # Create your views here.
 from django.http import HttpResponse
@@ -17,7 +16,7 @@ from rest_framework.views import APIView
 
 from books.models import Book
 from books.forms import ContactForm , BookForm
-from .serializers import BookSerializer
+from books.serializers import BookSerializer
 
 @method_decorator(permission_required('books.can_view_sensitive_data', raise_exception=True), name='dispatch')
 
@@ -61,12 +60,12 @@ class BookCreateView(CreateView):
 class BookListCreateView(APIView):
     def get(self, request):
         books  = Book.objects.all()
-        serializer  = BookSerializer(books, many = True)
+        serializer  = BookSerializer(books, many=True)
         data = serializer.data
-        return Response(data, status = status.HTTP_200_OK)
+        return Response(data, status= status.HTTP_200_OK)
     
     def post(self, request):
-        serializer = BookSerializer(data = request.data)
+        serializer = BookSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status= status.HTTP_201_CREATED)
